@@ -1,13 +1,9 @@
 package org.iut.mastermind.domain;
 
-import org.iut.mastermind.domain.partie.Joueur;
-import org.iut.mastermind.domain.partie.Partie;
-import org.iut.mastermind.domain.partie.PartieRepository;
-import org.iut.mastermind.domain.partie.ResultatPartie;
-import org.iut.mastermind.domain.proposition.Reponse;
-import org.iut.mastermind.domain.tirage.MotsRepository;
-import org.iut.mastermind.domain.tirage.ServiceNombreAleatoire;
-import org.iut.mastermind.domain.tirage.ServiceTirageMot;
+import org.iut.mastermind.domain.partie.*;
+import org.iut.mastermind.domain.proposition.*;
+import org.iut.mastermind.domain.tirage.*;
+
 import java.util.Optional;
 
 public class Mastermind {
@@ -24,27 +20,25 @@ public class Mastermind {
     // sinon on utilise le service de tirage aléatoire pour obtenir un mot
     // et on initialise une nouvelle partie et on la stocke
     public boolean nouvellePartie(Joueur joueur) {
-        Optional<Partie> partieEnCours = partieRepository.getPartieEnregistree(joueur);
-        if (isJeuEnCours(partieEnCours)) {
-            return false;
-        }
-        String mot = serviceTirageMot.tirageMotAleatoire();
-        Partie partie = Partie.create(joueur, mot);
-        partieRepository.create(partie);
-        return true;
+        return partieRepository.getPartieEnregistree(joueur)
+                .filter(partie -> !partie.isTerminee())
+                .map(partie -> false)
+                .orElseGet(() -> {
+                    String mot = serviceTirageMot.tirageMotAleatoire();
+                    Partie nouvellePartie = Partie.create(joueur, mot);
+                    partieRepository.create(nouvellePartie);
+                    return true;
+                });
     }
 
     // on récupère éventuellement la partie enregistrée pour le joueur
     // si la partie n'est pas une partie en cours, on renvoie une erreur
     // sinon on retourne le resultat du mot proposé
     public ResultatPartie evaluation(Joueur joueur, String motPropose) {
-        Optional<Partie> partieEnCours = partieRepository.getPartieEnregistree(joueur);
-        if (!isJeuEnCours(partieEnCours)) {
-            return ResultatPartie.ERROR;
-        }
-        Partie partie = partieEnCours.get();
-        Reponse reponse = calculeResultat(partie, motPropose).resultat();
-        return ResultatPartie.create(reponse, partie.isTerminee());
+        return partieRepository.getPartieEnregistree(joueur)
+                .filter(partie -> !partie.isTerminee())
+                .map(partie -> calculeResultat(partie, motPropose))
+                .orElse(ResultatPartie.ERROR);
     }
 
     // on évalue le résultat du mot proposé pour le tour de jeu
@@ -54,9 +48,15 @@ public class Mastermind {
         if (partie.isTerminee()) {
             return ResultatPartie.create(new Reponse(partie.getMot()), true);
         }
-        Reponse reponse = partie.tourDeJeu(motPropose);
-        partieRepository.update(partie);
-        return ResultatPartie.create(reponse, partie.isTerminee());
+
+        Object[] resultatTour = partie.tourDeJeu(motPropose);
+
+        Partie nouvellePartie = (Partie) resultatTour[0];
+        Reponse reponse = (Reponse) resultatTour[1];
+
+        partieRepository.update(nouvellePartie);
+
+        return ResultatPartie.create(reponse, nouvellePartie.isTerminee());
     }
 
     // si la partie en cours est vide, on renvoie false

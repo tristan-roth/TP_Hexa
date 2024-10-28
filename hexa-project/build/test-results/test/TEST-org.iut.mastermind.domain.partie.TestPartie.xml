@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test d'une partie:" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-10-28T21:05:48" hostname="LAPTOP-KKVU713N" time="1.421">
+  <properties/>
+  <testcase name="enregistre la partie quand elle est victorieuse" classname="org.iut.mastermind.domain.partie.TestPartie" time="1.384"/>
+  <testcase name="termine la partie quand le nombre d'essais est dÃ©passÃ©" classname="org.iut.mastermind.domain.partie.TestPartie" time="0.006"/>
+  <testcase name="lÃ¨ve une erreur quand la partie est terminÃ©e" classname="org.iut.mastermind.domain.partie.TestPartie" time="0.006"/>
+  <testcase name="met Ã  jour le nombre d'essais" classname="org.iut.mastermind.domain.partie.TestPartie" time="0.01"/>
+  <testcase name="retourne le rÃ©sultat du mot proposÃ©" classname="org.iut.mastermind.domain.partie.TestPartie" time="0.008"/>
+  <system-out><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+]]></system-out>
+  <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (C:\Users\G713\.gradle\caches\modules-2\files-2.1\net.bytebuddy\byte-buddy-agent\1.15.3\e619d89ed41a6cedc23bee3549cec8c4ffdaee7b\byte-buddy-agent-1.15.3.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>
